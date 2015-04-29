@@ -32,16 +32,19 @@
                     android:host="contentstream.cloudapp.net"
                     android:pathPrefix="/article" />
                 <data android:scheme="nook"
-                    android:host="article" />
+                    android:host="share.weimed.com"
+                    android:pathPrefix="/article" />
             </intent-filter>
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.VIEW"/>-->
-                <!--<category android:name="android.intent.category.DEFAULT"/>-->
-                <!--<category android:name="android.intent.category.BROWSABLE" />-->
-                <!--<data android:scheme="http"-->
-                    <!--android:host="example.com"-->
-                    <!--android:pathPrefix="/article" />-->
-            <!--</intent-filter>-->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http"
+                    android:host="example.com"
+                    android:pathPrefix="/article" />
+                <data android:scheme="example"
+                    android:host="gizmos" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".DeepLinkActivity"

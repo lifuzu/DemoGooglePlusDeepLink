@@ -26,10 +26,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
         button.setOnClickListener(this);
 
         // Receive the deep link
-        String deepLinkId = PlusShare.getDeepLinkId(this.getIntent());
-//        if (deepLinkId != "") {
-            Toast.makeText(getApplicationContext(), deepLinkId, Toast.LENGTH_SHORT).show();
-//        }
+        //String deepLinkId = PlusShare.getDeepLinkId(this.getIntent());
+
+        Uri data = getIntent().getData();
+        if (data != null) {
+            Toast.makeText(getApplicationContext(), data.getPath(), Toast.LENGTH_SHORT).show();
+        }
     }
 
 
