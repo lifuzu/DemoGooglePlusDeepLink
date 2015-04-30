@@ -1,4 +1,4 @@
-package com.example.rlee.demogoogleplusdeeplink.util;
+package com.weimed.rlee.demogoogleplusdeeplink.util;
 
 import android.app.Activity;
 import android.os.Build;

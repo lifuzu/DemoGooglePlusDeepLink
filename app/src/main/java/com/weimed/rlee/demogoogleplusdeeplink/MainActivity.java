@@ -1,9 +1,7 @@
-package com.example.rlee.demogoogleplusdeeplink;
+package com.weimed.rlee.demogoogleplusdeeplink;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -59,12 +57,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        String articleApplinksUrl = "http://contentstream.cloudapp.net:8080/article/m/1/2940041388447.10";
+        String articleApplinksUrl = "intent://contentstream.cloudapp.net:8080/article/m/1/9780231513531.4#Intent;scheme=nook;package=com.weimed.rlee.demogoogleplusdeeplink;end";
+        String articleApplinkUrlSpecific = "nook://contentstream.cloudapp.net:8080/article/m/1/9780231513531.4";
         switch (view.getId()) {
             case R.id.helloworld:
                 PlusShare.Builder builder = new PlusShare.Builder(this);
 
                 // Set call-to-action metadata.
+                //builder.addCallToAction("VIEW", Uri.parse(articleApplinksUrl), "/m/1/2940041388447.10");
 //                builder.addCallToAction(
 //                        "CREATE_ITEM", /** call-to-action button label */
 //                        Uri.parse(articleApplinksUrl), /** call-to-action url (for desktop use) */
@@ -74,7 +74,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 builder.setContentUrl(Uri.parse(articleApplinksUrl));
 
                 // Set the target deep-link ID (for mobile use).
-                builder.setContentDeepLinkId("nook://article");
+//                builder.setContentDeepLinkId("nook://contentstream.cloudapp.net:8080/article");
+                builder.setContentDeepLinkId("nook://contentstream.cloudapp.net/article",
+                        "Test Title",
+                        "Test Description",
+                        Uri.parse("https://developers.google.com/+/images/interactive-post-android.png"));
 
                 // Set the share text.
                 builder.setText("Create your Google+ Page too!");

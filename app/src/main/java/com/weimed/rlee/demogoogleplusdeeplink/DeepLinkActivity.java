@@ -1,6 +1,6 @@
-package com.example.rlee.demogoogleplusdeeplink;
+package com.weimed.rlee.demogoogleplusdeeplink;
 
-import com.example.rlee.demogoogleplusdeeplink.util.SystemUiHider;
+import com.weimed.rlee.demogoogleplusdeeplink.util.SystemUiHider;
 
 import android.annotation.TargetApi;
 import android.app.Activity;

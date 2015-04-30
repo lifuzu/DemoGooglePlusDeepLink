@@ -1,4 +1,4 @@
-package com.example.rlee.demogoogleplusdeeplink;
+package com.weimed.rlee.demogoogleplusdeeplink;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
