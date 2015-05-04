@@ -20,48 +20,62 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <!-- Prepare for deep links -->
+            <!--<intent-filter>-->
+                <!--&lt;!&ndash;<action android:name="com.google.android.apps.plus.VIEW_DEEP_LINK" />&ndash;&gt;-->
+
+                <!--&lt;!&ndash;<data android:scheme="vnd.google.deeplink" />&ndash;&gt;-->
+
+                <!--<action android:name="android.intent.action.VIEW" />-->
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
+                <!--<category android:name="android.intent.category.BROWSABLE" />-->
+                <!--<data android:scheme="http"-->
+                    <!--android:host="contentstream.cloudapp.net"-->
+                    <!--android:pathPrefix="/article"-->
+                    <!--/>-->
+                <!--<data android:scheme="nook"-->
+                    <!--android:host="contentstream.cloudapp.net"-->
+                    <!--android:pathPrefix="/article" />-->
+            <!--</intent-filter>-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.VIEW"/>-->
+                <!--<category android:name="android.intent.category.DEFAULT"/>-->
+                <!--<category android:name="android.intent.category.BROWSABLE" />-->
+                <!--<data android:scheme="http"-->
+                    <!--android:host="example.com"-->
+                    <!--android:pathPrefix="/article" />-->
+                <!--<data android:scheme="example"-->
+                    <!--android:host="gizmos" />-->
+            <!--</intent-filter>-->
+
+        </activity>
+        <activity
+            android:name="com.weimed.rlee.demogoogleplusdeeplink.DeepLinkActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_deep_link"
+
+            android:noHistory="true" >
+            <!--android:theme="@android:style/Theme.NoDisplay"-->
+            <!--android:parentActivityName="com.weimed.rlee.demogoogleplusdeeplink.MainActivity"-->
+            <!--<meta-data-->
+                <!--android:name="android.support.PARENT_ACTIVITY"-->
+                <!--android:value="com.weimed.rlee.demogoogleplusdeeplink.MainActivity" />-->
             <intent-filter>
-                <!--<action android:name="com.google.android.apps.plus.VIEW_DEEP_LINK" />-->
-
-                <!--<data android:scheme="vnd.google.deeplink" />-->
-
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="com.google.android.apps.plus.VIEW_DEEP_LINK" />
+                <data android:scheme="vnd.google.deeplink" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http"
-                    android:host="contentstream.cloudapp.net"
-                    android:pathPrefix="/article"
-                    />
-                <data android:scheme="nook"
-                    android:host="contentstream.cloudapp.net"
-                    android:pathPrefix="/article" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="http"
-                    android:host="example.com"
+                    android:host="contentstream.cloudapp.net"
                     android:pathPrefix="/article" />
-                <data android:scheme="example"
-                    android:host="gizmos" />
+                <data android:scheme="nook"
+                    android:host="example"
+                    android:pathPrefix="/article" />
             </intent-filter>
-            <!--<intent-filter>-->
-                <!--<action android:name="com.google.android.apps.plus.VIEW_DEEP_LINK" />-->
-                <!--<data android:scheme="vnd.google.deeplink" />-->
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-                <!--<category android:name="android.intent.category.BROWSABLE" />-->
-            <!--</intent-filter>-->
-        </activity>
-        <activity
-            android:name="com.weimed.rlee.demogoogleplusdeeplink.DeepLinkActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_deep_link"
-            android:parentActivityName="com.weimed.rlee.demogoogleplusdeeplink.MainActivity"
-            android:theme="@style/FullscreenTheme" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.weimed.rlee.demogoogleplusdeeplink.MainActivity" />
         </activity>
         <meta-data
             android:name="com.google.android.gms.version"

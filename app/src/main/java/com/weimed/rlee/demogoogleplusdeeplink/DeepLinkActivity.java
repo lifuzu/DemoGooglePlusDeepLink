@@ -1,130 +1,131 @@
 package com.weimed.rlee.demogoogleplusdeeplink;
 
-import com.weimed.rlee.demogoogleplusdeeplink.util.SystemUiHider;
-
-import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
+import android.webkit.ConsoleMessage;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebStorage;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+
+import com.google.android.gms.plus.PlusShare;
+
+import java.lang.reflect.Method;
 
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  *
- * @see SystemUiHider
  */
 public class DeepLinkActivity extends Activity {
-    /**
-     * Whether or not the system UI should be auto-hidden after
-     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
-     */
-    private static final boolean AUTO_HIDE = true;
 
-    /**
-     * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
-     * user interaction before hiding the system UI.
-     */
-    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
+    private static final String TAG = "DeepLink_Activity";
+    private static final String URL_TO_LOAD = "http://google.com";
 
-    /**
-     * If set, will toggle the system UI visibility upon interaction. Otherwise,
-     * will show the system UI visibility upon interaction.
-     */
-    private static final boolean TOGGLE_ON_CLICK = true;
-
-    /**
-     * The flags to pass to {@link SystemUiHider#getInstance}.
-     */
-    private static final int HIDER_FLAGS = SystemUiHider.FLAG_HIDE_NAVIGATION;
-
-    /**
-     * The instance of the {@link SystemUiHider} for this activity.
-     */
-    private SystemUiHider mSystemUiHider;
+    protected WebView webView;
+    protected WebSettings webSettings;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_deep_link);
 
-    }
+        String deepLinkId = PlusShare.getDeepLinkId(this.getIntent());
+//        Intent launchIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(deepLinkId));
+//        launchIntent.setPackage("com.example.app");
+//        startActivity(launchIntent);
+        webView = (WebView) findViewById(R.id.webview);
+        webView.loadUrl(URL_TO_LOAD);
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
 
-        // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
-        delayedHide(100);
-    }
-
-    /**
-     * Set up the {@link android.app.ActionBar}, if the API is available.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private void setupActionBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            // Show the Up button in the action bar.
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            // This ID represents the Home or Up button. In the case of this
-            // activity, the Up button is shown. Use NavUtils to allow users
-            // to navigate up one level in the application structure. For
-            // more details, see the Navigation pattern on Android Design:
-            //
-            // http://developer.android.com/design/patterns/navigation.html#up-vs-back
-            //
-            // TODO: If Settings has multiple levels, Up should navigate up
-            // that hierarchy.
-            NavUtils.navigateUpFromSameTask(this);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-    View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (AUTO_HIDE) {
-                delayedHide(AUTO_HIDE_DELAY_MILLIS);
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onConsoleMessage(ConsoleMessage cm) {
+                Log.d(TAG, cm.sourceId() + ":" + cm.lineNumber() + " " + cm.message());
+                return true;
             }
-            return false;
-        }
-    };
 
-    Handler mHideHandler = new Handler();
-    Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            mSystemUiHider.hide();
-        }
-    };
+            @Override
+            public void onExceededDatabaseQuota(String url, String databaseIdentifier, long quota,
+                                                long estimatedDatabaseSize, long totalQuota, WebStorage.QuotaUpdater quotaUpdater) {
+                quotaUpdater.updateQuota(estimatedDatabaseSize);
+                Log.d(TAG, "onExceededDatabaseQuota " + url + " " + databaseIdentifier + " " + quota
+                        + " " + estimatedDatabaseSize + " " + totalQuota + " " + quotaUpdater);
+            }
 
-    /**
-     * Schedules a call to hide() in [delay] milliseconds, canceling any
-     * previously scheduled calls.
-     */
-    private void delayedHide(int delayMillis) {
-        mHideHandler.removeCallbacks(mHideRunnable);
-        mHideHandler.postDelayed(mHideRunnable, delayMillis);
+            @Override
+            public void onReachedMaxAppCacheSize(long requiredStorage, long quota, WebStorage.QuotaUpdater quotaUpdater) {
+                quotaUpdater.updateQuota(requiredStorage);
+                Log.d(TAG, "onReachedMaxAppCacheSize current = " + quota + " required = " + requiredStorage);
+            }
+        });
+
+        webView.setWebViewClient(new WebViewClient() {
+            /*@Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+                Log.v(TAG, "shouldInterceptRequest: " + url);
+                WebResourceResponse response = ResourceManager.createLocalResourceResponse(WebActivity.this, url);
+                return response != null ? response : super.shouldInterceptRequest(view, url);
+            }*/
+
+            @Override
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                Log.d(TAG, "onReceivedError " + description + " for " + failingUrl);
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                Log.v(TAG, "shouldOverrideUrlLoading: " + url);
+                return super.shouldOverrideUrlLoading(view, url);
+            }
+        });
+
+        webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setAllowFileAccess(true);
+        webSettings.setAllowContentAccess(true);
+
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setDatabaseEnabled(true);
+        webSettings.setDatabasePath(getDir("webapp_db", MODE_PRIVATE).getAbsolutePath());
+        webSettings.setAppCacheEnabled(true);
+        webSettings.setAppCachePath(getDir("webapp_cache", MODE_PRIVATE).getAbsolutePath());
+
+        // make sure the viewport meta tag is honored
+        webSettings.setUseWideViewPort(true);
+        webSettings.setLoadWithOverviewMode(true);
+
+        setUniversalAccessEnabled(webSettings, true);
+        webView.setWebContentsDebuggingEnabled(true);
+    }
+
+    private static boolean setUniversalAccessEnabled(WebSettings webSettings, boolean enabled) {
+        if (Build.VERSION.SDK_INT >= 16 /*JELLY_BEAN*/) {
+            try {
+                Method webSettingsMethod = WebSettings.class.getDeclaredMethod("setAllowUniversalAccessFromFileURLs", Boolean.TYPE);
+                webSettingsMethod.invoke(webSettings, enabled);
+                Log.d(TAG, "WebView universal access enabled = " + enabled);
+
+                webSettingsMethod = WebSettings.class.getDeclaredMethod("setAllowFileAccessFromFileURLs", Boolean.TYPE);
+                webSettingsMethod.invoke(webSettings, enabled);
+                Log.d(TAG, "WebView file access enabled = " + enabled);
+
+                return true;
+            } catch (Exception e) {
+                Log.e(TAG, "Failed to enable WebView universal access", e);
+            }
+        }
+        return false;
     }
 }
